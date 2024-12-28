@@ -2,16 +2,17 @@ package com.javajuniorready.domain.numberreceiver;
 
 import com.javajuniorready.domain.numberreceiver.dto.SixNumberDto;
 import com.javajuniorready.domain.numberreceiver.dto.TicketDto;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+@RequiredArgsConstructor
 public class NumberReceiverFacade {
-    private NumberReceiverRepository numberReceiverRepository;
-    private NumbersValidator numbersValidator;
-    private NumberReceiverMapper numberReceiverMapper;
-    private NumberTicketRepository numberTicketRepository;
-    private LottoDrawDateGenerator lottoDrawDateGenerator;
+    private final NumberReceiverRepository numberReceiverRepository;
+    private final NumbersValidator numbersValidator;
+    private final NumberReceiverMapper numberReceiverMapper;
+    private final NumberTicketRepository numberTicketRepository;
+    private final LottoDrawDateGenerator lottoDrawDateGenerator;
     private int counter = 0;
 
     public SixNumbers takeUserNumbers(SixNumberDto sixNumberDto) {

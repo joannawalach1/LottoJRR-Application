@@ -18,9 +18,9 @@ public class NumberReceiverController {
     private final NumberReceiverFacade numberReceiverFacade;
 
     @PostMapping
-    public ResponseEntity<SixNumberDto> inputNumbers(@RequestBody SixNumberDto sixNumberDto) {
+    public ResponseEntity<SixNumbers> inputNumbers(@RequestBody SixNumberDto sixNumberDto) {
         SixNumbers sixNumbers = NumberReceiverMapper.toEntity(sixNumberDto);
-        return ResponseEntity.ok(sixNumberDto);
+        return ResponseEntity.ok(sixNumbers);
     }
 
     @GetMapping("/ticket/{id}")
