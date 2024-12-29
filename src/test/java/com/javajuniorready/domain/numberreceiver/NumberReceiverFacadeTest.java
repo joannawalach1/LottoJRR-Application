@@ -5,10 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @RequiredArgsConstructor
 public class NumberReceiverFacadeTest {
@@ -58,6 +58,69 @@ public class NumberReceiverFacadeTest {
                 () -> numberReceiverFacade.createTicket(ticketDto),
                 "Each number must be between 1 and 99");
     }
+
+    @Test
+    public void shouldSaveTicketsInRepositoryIfUserGaveCorrectData() {
+        TicketDto ticketDto = new TicketDto(1, LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
+        Ticket savedTicket = numberReceiverFacade.createTicket(ticketDto);
+        Ticket ticketById = numberReceiverFacade.findTicketById(savedTicket.id());
+
+        assertNotNull(savedTicket, "Ticket should be saved in the repository");
+        assertEquals(ticketById.sixNumbers(), savedTicket.sixNumbers(), "Six numbers should match the input data");
+    }
+
+    @Test
+    public void shouldGenerateValidLottoDrawDate() {
+        TicketDto ticketDto = new TicketDto(1, LocalDateTime.of(2024, 12, 29, 12, 0, 0), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
+        Ticket ticket = numberReceiverFacade.createTicket(ticketDto);
+
+        assertNotNull(ticket.lottoDrawDate());
+        assertTrue(ticketDto.lottoDrawDate().isAfter(ticket.lottoDrawDate()));
+    }
+
+    @Test
+    public void shouldCorrectlyMapTicketDtoToTicketEntity() {
+        TicketDto ticketDto = new TicketDto(1, LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
+
+        Ticket ticketEntity = NumberReceiverMapper.toTicketEntity(ticketDto);
+
+        assertNotNull(ticketEntity);
+        assertEquals(ticketDto.sixNumbers(), ticketEntity.sixNumbers());
+        assertEquals(ticketDto.id(), ticketEntity.id());
+    }
+
+    @Test
+    public void shouldFindTicketById() {
+        TicketDto ticketDto = new TicketDto(1, LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
+
+        Ticket ticket = numberReceiverFacade.createTicket(ticketDto);
+
+        Optional<Ticket> foundTicket = numberTicketRepository.findTicketById(ticket.id());
+
+        assertNotNull(foundTicket);
+        assertEquals(ticket.id(), foundTicket.get().id());
+    }
+
+    @Test
+    public void shouldNotSaveTicketWithIncorrectData() {
+        TicketDto ticketDto = new TicketDto(1, LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5)));
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                numberReceiverFacade.createTicket(ticketDto));
+
+        assertEquals("SixNumbers must have exactly 6 numbers", exception.getMessage());
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenTicketDtoIsNull() {
+        TicketDto ticketDto = null;
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                numberReceiverFacade.createTicket(ticketDto));
+
+        assertEquals("Ticket or sixNumbers cannot be null", exception.getMessage());
+    }
+
 
 
 
