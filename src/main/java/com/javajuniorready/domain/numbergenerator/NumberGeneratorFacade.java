@@ -40,7 +40,7 @@ public class NumberGeneratorFacade {
     }
 
     public Optional<WinningNumbers> findWinningNumbersByDate(LocalDateTime lottoDrawDate) {
-        return winningNumberRepository.findWinningNumbersByDrawDate(lottoDrawDate);
+        return winningNumberRepository.findWinningNumbersByWinningNumbersDrawDate(lottoDrawDate);
     }
 
     public List<WinningNumbers> findAllWinningNumbers() {
