@@ -17,7 +17,6 @@ public class NumberReceiverFacade {
     private final NumberTicketRepository numberTicketRepository;
     private final LottoDrawDateGenerator lottoDrawDateGenerator;
 
-    private static final AtomicInteger counter = new AtomicInteger(1);
     private static final Logger logger = LoggerFactory.getLogger(NumberReceiverFacade.class);
 
     public Ticket createTicket(TicketDto ticketDto) {
@@ -25,15 +24,25 @@ public class NumberReceiverFacade {
             throw new IllegalArgumentException("Ticket or sixNumbers cannot be null");
         }
 
-        TicketDto build = TicketDto.builder()
+        if (ticketDto.sixNumbers().userNumbers().size() != 6) {
+            throw new IllegalArgumentException("SixNumbers must have exactly 6 numbers");
+        }
+
+        ticketDto.sixNumbers().userNumbers().forEach(number -> {
+            if (number < 1 || number > 99) {
+                throw new IllegalArgumentException("Each number must be between 1 and 99");
+            }
+        });
+
+        LocalDateTime lottoDrawDate = lottoDrawDateGenerator.generateDrawDate();
+
+        Ticket ticketEntity = Ticket.builder()
                 .id(ticketDto.id())
-                .lottoDrawDate(ticketDto.lottoDrawDate())
                 .sixNumbers(ticketDto.sixNumbers())
+                .lottoDrawDate(lottoDrawDate)
                 .build();
-
-        Ticket ticketEntity = NumberReceiverMapper.toTicketEntity(ticketDto);
+        numbersValidator.validateUserNumbers(ticketDto.sixNumbers());
         Ticket savedTicket = numberTicketRepository.saveTickets(ticketEntity);
-
         logger.info("Ticket with id:{} created: {}", ticketDto.id(), savedTicket);
         return savedTicket;
     }
