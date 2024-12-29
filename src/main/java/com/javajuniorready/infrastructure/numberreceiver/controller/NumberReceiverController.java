@@ -2,10 +2,10 @@ package com.javajuniorready.infrastructure.numberreceiver.controller;
 
 import com.javajuniorready.domain.numberreceiver.NumberReceiverFacade;
 import com.javajuniorready.domain.numberreceiver.NumberReceiverMapper;
-import com.javajuniorready.domain.numberreceiver.SixNumbers;
 import com.javajuniorready.domain.numberreceiver.Ticket;
-import com.javajuniorready.domain.numberreceiver.dto.SixNumberDto;
+import com.javajuniorready.domain.numberreceiver.dto.TicketDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,20 +17,25 @@ import java.util.List;
 public class NumberReceiverController {
     private final NumberReceiverFacade numberReceiverFacade;
 
+
     @PostMapping
-    public ResponseEntity<SixNumbers> inputNumbers(@RequestBody SixNumberDto sixNumberDto) {
-        SixNumbers sixNumbers = NumberReceiverMapper.toEntity(sixNumberDto);
-        return ResponseEntity.ok(sixNumbers);
+    public ResponseEntity<Ticket> createTickets(@RequestBody TicketDto ticketDto) {
+        Ticket ticket = NumberReceiverMapper.toTicketEntity(ticketDto);
+        numberReceiverFacade.createTicket(ticketDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ticket);
     }
 
+
     @GetMapping("/ticket/{id}")
-    public Ticket findTicketById(@PathVariable Integer id) {
-        return numberReceiverFacade.findTicketById(id);
+    public ResponseEntity<TicketDto> findTicketById(@PathVariable Integer id) {
+        Ticket ticketById = numberReceiverFacade.findTicketById(id);
+        TicketDto ticketDto = NumberReceiverMapper.toTicketDto(ticketById);
+        return ResponseEntity.status(HttpStatus.OK).body(ticketDto);
     }
 
     @GetMapping("/tickets")
-    public List<Ticket> findTicketById() {
-        return numberReceiverFacade.findAll();
+    public ResponseEntity<List<Ticket>> findTicketById() {
+        List<Ticket> allTickets = numberReceiverFacade.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(allTickets);
     }
-
 }

@@ -4,5 +4,5 @@ import lombok.Builder;
 
 import java.time.LocalDateTime;
 @Builder
-public record Ticket(int id, LocalDateTime lottoDrawDate, SixNumbers sixNumbers) {
+public record Ticket( int id, LocalDateTime lottoDrawDate, SixNumbers sixNumbers) {
 }

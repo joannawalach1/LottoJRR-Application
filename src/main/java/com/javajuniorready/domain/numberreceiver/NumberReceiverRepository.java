@@ -3,7 +3,7 @@ package com.javajuniorready.domain.numberreceiver;
 import java.util.List;
 
 public interface NumberReceiverRepository {
-SixNumbers saveUserNumbers(SixNumbers sixNumbers);
-List<SixNumbers> findAll();
-SixNumbers findById(int id);
+Ticket createTicket(Ticket ticket);
+List<Ticket> findAll();
+Ticket findById(int id);
 }
