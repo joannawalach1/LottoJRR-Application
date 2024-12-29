@@ -1,7 +1,6 @@
 package com.javajuniorready.domain.numbergenerator;
 
 import com.javajuniorready.domain.numbergenerator.dto.WinningNumbersDto;
-import com.javajuniorready.domain.numberreceiver.NumberReceiverMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;

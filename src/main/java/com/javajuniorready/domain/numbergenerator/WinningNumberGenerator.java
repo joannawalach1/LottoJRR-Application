@@ -19,23 +19,23 @@ public class WinningNumberGenerator {
     public WinningNumbers generateWinningNumbers(LocalDateTime lottoDrawDate) throws JsonProcessingException {
             String responseData = winningNumbersFetcher.fetchApiData("http://www.randomnumberapi.com:80/api/v1.0/random?min=1&max=99&count=6");
 
-            logger.info("Odpowiedź z API: {}", responseData);
+            logger.info("Api response: {}", responseData);
 
             ObjectMapper objectMapper = new ObjectMapper();
             Set<Integer> numbersList = objectMapper.readValue(responseData, new TypeReference<Set<Integer>>() {});
 
-            logger.info("Wygenerowane liczby: {}", numbersList);
+            logger.info("Generated numbers: {}", numbersList);
 
             WinningNumbersSet numbersSet = new WinningNumbersSet(numbersList);
 
-            logger.info("Zestaw liczb: {}", numbersSet);
+            logger.info("Set of numbers: {}", numbersSet);
             WinningNumbers winningNumbers = WinningNumbers.builder()
                     .id(counter++)
                     .WinningNumbersDrawDate(lottoDrawDate)
                     .winningNumbersSet(numbersSet)
                     .build();
 
-            logger.info("Stworzony obiekt WinningNumbers: {}", winningNumbers);
+            logger.info("WinningNumbers: " + lottoDrawDate + " created: {}", winningNumbers);
 
             return winningNumbers;
         }
