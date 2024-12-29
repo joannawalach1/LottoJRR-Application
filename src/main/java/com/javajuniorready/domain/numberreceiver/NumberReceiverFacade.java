@@ -47,25 +47,19 @@ public class NumberReceiverFacade {
     }
 
     public Ticket findTicketById(int id) {
-        Optional<Ticket> ticketById = numberTicketRepository.findTicketById(id);
-        if (ticketById.isPresent()) {
-            logger.info("Ticket with id:{} found: {}", id, ticketById.get());
-            return ticketById.get();
-        } else {
-            logger.info("Ticket with id:{} not found", id);
-            throw new TicketNotFoundException("Ticket with id " + id + " not found");
-        }
+        return numberTicketRepository.findTicketById(id)
+                .orElseThrow(() -> new TicketNotFoundException("Ticket with id " + id + " not found"));
     }
+
 
     public List<Ticket> findAll() {
         List<Ticket> allTickets = numberTicketRepository.findAll();
-        if (allTickets.isEmpty()) {
-            logger.info("No tickets found in the database.");
-            throw new TicketNotFoundException("Tickets not found");
-        } else {
-            logger.info("All tickets in the database: {}", allTickets);
-        }
-        return allTickets;
-    }
 
+        return Optional.of(allTickets)
+                .filter(tickets -> !tickets.isEmpty())
+                .orElseThrow(() -> {
+                    logger.info("No tickets found in the database.");
+                    return new TicketNotFoundException("Tickets not found");
+                });
+    }
 }
