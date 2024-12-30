@@ -1,4 +1,4 @@
-package com.javajuniorready.domain.resulltchecker;
+package com.javajuniorready.domain.resultchecker;
 
 import org.junit.jupiter.api.Test;
 

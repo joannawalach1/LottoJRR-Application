@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
 @SpringBootApplication
-@EnableMongoRepositories(basePackages = "com.javajuniorready.domain.numbergenerator")
+@EnableMongoRepositories(basePackages = {"com.javajuniorready.domain.numbergenerator", "com.javajuniorready.domain.resultchecker"})
 public class LottoApplication {
 
     public static void main(String[] args) {
