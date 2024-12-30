@@ -11,4 +11,6 @@ import java.util.Optional;
 @Repository
 public interface WinningNumbersRepository extends MongoRepository<WinningNumbers, ObjectId> {
     Optional<WinningNumbers> findWinningNumbersByWinningNumbersDrawDate(LocalDateTime lottoDrawDate);
+
+
 }
