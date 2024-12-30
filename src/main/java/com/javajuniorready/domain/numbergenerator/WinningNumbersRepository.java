@@ -7,5 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 @Repository
 public interface WinningNumbersRepository extends MongoRepository<WinningNumbers, Integer> {
+    WinningNumbers saveWinningNumbers(WinningNumbers winningNumbers);
+
     Optional<WinningNumbers> findWinningNumbersByWinningNumbersDrawDate(LocalDateTime lottoDrawDate);
 }

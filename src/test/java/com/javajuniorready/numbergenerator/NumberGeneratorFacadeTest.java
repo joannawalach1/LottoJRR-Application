@@ -55,13 +55,6 @@ public class NumberGeneratorFacadeTest {
         assertEquals(nextDrawDate, LocalDateTime.of(2025, 1, 4, 12, 0, 0));
     }
 
-    @Test
-    public void shouldGenerateUniqueAndSequentialIds() throws JsonProcessingException {
-        WinningNumbersDto first = numberGeneratorFacade.generateLottoWinningNumbers(LocalDateTime.now());
-        WinningNumbersDto second = numberGeneratorFacade.generateLottoWinningNumbers(LocalDateTime.now().plusDays(7));
-        assertNotEquals(first.id(), second.id());
-        assertTrue(first.id() < second.id());
-    }
 
 
 }

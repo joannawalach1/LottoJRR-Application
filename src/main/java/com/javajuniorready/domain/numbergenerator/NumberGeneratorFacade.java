@@ -16,6 +16,7 @@ public class NumberGeneratorFacade {
     private static final Logger logger = LoggerFactory.getLogger(NumberGeneratorFacade.class);
     private final WinningNumberGenerator winningNumberGenerator;
     private final WinningNumbersRepository winningNumberRepository;
+    private final NumberReceiverFacade numberReceiverFacade;
 
     public WinningNumbersDto generateLottoWinningNumbers(LocalDateTime lottoDrawDate) throws JsonProcessingException {
         logger.info("Generating winning numbers for draw date: {}", lottoDrawDate);
@@ -26,13 +27,8 @@ public class NumberGeneratorFacade {
             throw new IllegalStateException("Unable to generate winning numbers.");
         }
 
-        WinningNumbers winningNumbersSaved = winningNumberRepository.save(winningNumbers);
+        WinningNumbers winningNumbersSaved = winningNumberRepository.saveWinningNumbers(winningNumbers);
         logger.info("Winning numbers saved: {}", winningNumbersSaved);
-
-        if (winningNumbersSaved == null) {
-            logger.error("Failed to save winning numbers.");
-            throw new IllegalStateException("Unable to save winning numbers.");
-        }
 
         WinningNumbersDto winningNumberDto = WinningNumbersMapper.toWinningNumberDto(winningNumbersSaved);
         logger.info("WinningNumbers with id:{} created: {}", winningNumbersSaved.id(), winningNumbersSaved);
