@@ -14,7 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class NumberGeneratorFacade {
     private static final Logger logger = LoggerFactory.getLogger(NumberGeneratorFacade.class);
-    private final WinningNumberGenerator winningNumberGenerator;
+    private final WinningNumberGenerator winningNumberGenerator = new WinningNumberGenerator();
     private final WinningNumbersRepository winningNumberRepository;
     private final NumberReceiverFacade numberReceiverFacade;
 
@@ -27,7 +27,7 @@ public class NumberGeneratorFacade {
             throw new IllegalStateException("Unable to generate winning numbers.");
         }
 
-        WinningNumbers winningNumbersSaved = winningNumberRepository.saveWinningNumbers(winningNumbers);
+        WinningNumbers winningNumbersSaved = winningNumberRepository.save(winningNumbers);
         logger.info("Winning numbers saved: {}", winningNumbersSaved);
 
         WinningNumbersDto winningNumberDto = WinningNumbersMapper.toWinningNumberDto(winningNumbersSaved);

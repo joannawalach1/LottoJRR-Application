@@ -15,11 +15,10 @@ public class NumberGeneratorConfiguration {
     }
 
     @Bean
-    public NumberGeneratorFacade numberGeneratorFacade(WinningNumbersRepository customWinningNumbersRepository, NumberReceiverFacade numberReceiverFacade) {
+    public NumberGeneratorFacade numberGeneratorFacade(WinningNumbersRepository winningNumbersRepository, NumberReceiverFacade numberReceiverFacade) {
         WinningNumberGenerator winningNumberGenerator = new WinningNumberGenerator();
         return new NumberGeneratorFacade(
-                winningNumberGenerator(),
-                customWinningNumbersRepository,
+                winningNumbersRepository,
                 numberReceiverFacade
         );
     }

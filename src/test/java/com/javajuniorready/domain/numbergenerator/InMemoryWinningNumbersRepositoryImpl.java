@@ -1,7 +1,6 @@
-package com.javajuniorready.numbergenerator;
+package com.javajuniorready.domain.numbergenerator;
 
-import com.javajuniorready.domain.numbergenerator.WinningNumbers;
-import com.javajuniorready.domain.numbergenerator.WinningNumbersRepository;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,14 +33,15 @@ public class InMemoryWinningNumbersRepositoryImpl implements WinningNumbersRepos
     }
 
     @Override
-    public Optional<WinningNumbers> findById(Integer integer) {
+    public Optional<WinningNumbers> findById(ObjectId objectId) {
         return Optional.empty();
     }
 
     @Override
-    public boolean existsById(Integer integer) {
+    public boolean existsById(ObjectId objectId) {
         return false;
     }
+
 
     @Override
     public List<WinningNumbers> findAll() {
@@ -49,9 +49,10 @@ public class InMemoryWinningNumbersRepositoryImpl implements WinningNumbersRepos
     }
 
     @Override
-    public List<WinningNumbers> findAllById(Iterable<Integer> integers) {
-        return List.of();
+    public Iterable<WinningNumbers> findAllById(Iterable<ObjectId> objectIds) {
+        return null;
     }
+
 
     @Override
     public long count() {
@@ -59,9 +60,11 @@ public class InMemoryWinningNumbersRepositoryImpl implements WinningNumbersRepos
     }
 
     @Override
-    public void deleteById(Integer integer) {
+    public void deleteById(ObjectId objectId) {
 
     }
+
+
 
     @Override
     public void delete(WinningNumbers entity) {
@@ -69,9 +72,10 @@ public class InMemoryWinningNumbersRepositoryImpl implements WinningNumbersRepos
     }
 
     @Override
-    public void deleteAllById(Iterable<? extends Integer> integers) {
+    public void deleteAllById(Iterable<? extends ObjectId> objectIds) {
 
     }
+
 
     @Override
     public void deleteAll(Iterable<? extends WinningNumbers> entities) {

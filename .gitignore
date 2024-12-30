@@ -36,6 +36,3 @@ build/
 
 ### Mac OS ###
 .DS_Store
-/.idea/jpa.xml
-/.idea/mongoSettings.xml
-/.idea/sqlDataSources.xml
