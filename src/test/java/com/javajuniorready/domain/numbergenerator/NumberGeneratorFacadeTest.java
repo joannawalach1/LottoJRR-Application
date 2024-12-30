@@ -1,11 +1,10 @@
-package com.javajuniorready.numbergenerator;
+package com.javajuniorready.domain.numbergenerator;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.javajuniorready.domain.numbergenerator.*;
 import com.javajuniorready.domain.numbergenerator.dto.WinningNumbersDto;
-import com.javajuniorready.infrastructure.numbergenerator.http.WinningNumbersFetcher;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -21,10 +20,16 @@ public class NumberGeneratorFacadeTest {
     NumberGeneratorFacade numberGeneratorFacade = new NumberGeneratorFacade(
             winningNumbersRepository
     );
+    private ObjectId testId;
+
+    @BeforeEach
+    void setUp() {
+        testId = new ObjectId();
+    }
 
     @Test
     public void shouldGenerateWinningNumbersBasedOnDrawDate() throws JsonProcessingException {
-        WinningNumbers winningNumbers = new WinningNumbers(1, LocalDateTime.of(2024,12,29, 0,0, 0), new WinningNumbersSet(Set.of(1, 2, 3, 4, 5, 6)));
+        WinningNumbers winningNumbers = new WinningNumbers(testId, LocalDateTime.of(2024,12,29, 0,0, 0), new WinningNumbersSet(Set.of(1, 2, 3, 4, 5, 6)));
         WinningNumbersDto winningNumbersDto = numberGeneratorFacade.generateLottoWinningNumbers(winningNumbers.WinningNumbersDrawDate());
         assertEquals(winningNumbersDto.winningNumbersSet(), winningNumbersDto.winningNumbersSet());
     }
@@ -49,14 +54,4 @@ public class NumberGeneratorFacadeTest {
         WinningNumbersDto winningNumbersDto = numberGeneratorFacade.generateLottoWinningNumbers(expectedDate);
         assertEquals(expectedDate, winningNumbersDto.WinningNumbersDrawDate());
     }
-
-    @Test
-    public void shouldGenerateUniqueAndSequentialIds() throws JsonProcessingException {
-        WinningNumbersDto first = numberGeneratorFacade.generateLottoWinningNumbers(LocalDateTime.now());
-        WinningNumbersDto second = numberGeneratorFacade.generateLottoWinningNumbers(LocalDateTime.now().plusDays(7));
-        assertNotEquals(first.id(), second.id());
-        assertTrue(first.id() < second.id());
-    }
-
-
 }
