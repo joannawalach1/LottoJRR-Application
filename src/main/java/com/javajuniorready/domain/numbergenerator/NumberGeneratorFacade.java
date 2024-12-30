@@ -2,6 +2,7 @@ package com.javajuniorready.domain.numbergenerator;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.javajuniorready.domain.numbergenerator.dto.WinningNumbersDto;
+import com.javajuniorready.domain.numberreceiver.NumberReceiverFacade;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class NumberGeneratorFacade {
     private static final Logger logger = LoggerFactory.getLogger(NumberGeneratorFacade.class);
-    private final WinningNumberGenerator winningNumberGenerator = new WinningNumberGenerator();
+    private final WinningNumberGenerator winningNumberGenerator;
     private final WinningNumbersRepository winningNumberRepository;
 
     public WinningNumbersDto generateLottoWinningNumbers(LocalDateTime lottoDrawDate) throws JsonProcessingException {

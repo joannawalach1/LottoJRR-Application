@@ -1,6 +1,8 @@
 package com.javajuniorready.domain.numbergenerator.dto;
 
-import java.util.Set;
+import lombok.Builder;
 
+import java.util.Set;
+@Builder
 public record WinningNumbersSetDto(Set<Integer> winningNumbersSet) {
 }

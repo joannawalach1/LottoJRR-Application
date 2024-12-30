@@ -62,4 +62,9 @@ public class NumberReceiverFacade {
                     return new TicketNotFoundException("Tickets not found");
                 });
     }
+
+    public LocalDateTime generateLottoNextDrawDate(LocalDateTime lottoDrawDate) {
+        lottoDrawDate = LocalDateTime.now();
+         return lottoDrawDateGenerator.generateWinningNumbersDrawDate(lottoDrawDate);
+    }
 }

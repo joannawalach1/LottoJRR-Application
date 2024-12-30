@@ -11,6 +11,4 @@ public record WinningNumbers(
         @Id
         ObjectId id,
         LocalDateTime WinningNumbersDrawDate,
-        WinningNumbersSet winningNumbersSet) {
-
-}
+        WinningNumbersSet winningNumbersSet) {}

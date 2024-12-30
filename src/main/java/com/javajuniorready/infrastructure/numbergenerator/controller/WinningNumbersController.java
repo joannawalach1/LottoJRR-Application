@@ -1,9 +1,12 @@
 package com.javajuniorready.infrastructure.numbergenerator.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.javajuniorready.domain.numbergenerator.*;
+import com.javajuniorready.domain.numbergenerator.NumberGeneratorFacade;
+import com.javajuniorready.domain.numbergenerator.WinningNumbers;
+import com.javajuniorready.domain.numbergenerator.WinningNumbersMapper;
+import com.javajuniorready.domain.numbergenerator.WinningNumbersNotFound;
 import com.javajuniorready.domain.numbergenerator.dto.WinningNumbersDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +17,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-
+@RequiredArgsConstructor
 public class WinningNumbersController {
-    @Autowired
-    private NumberGeneratorFacade numberGeneratorFacade;
-    @Autowired
-    private WinningNumbersRepository repository;
+    private final NumberGeneratorFacade numberGeneratorFacade;
 
 
     @GetMapping("/{date}")
@@ -32,7 +32,7 @@ public class WinningNumbersController {
 
     @GetMapping("/all")
     public ResponseEntity<List<WinningNumbersDto>> findAllWinningNumbers() {
-        List<WinningNumbers> winningNumbersByDate = repository.findAll();
+        List<WinningNumbers> winningNumbersByDate = numberGeneratorFacade.findAllWinningNumbers();
         List<WinningNumbersDto> winningNumberDto = WinningNumbersMapper.toWinningNumberDto(winningNumbersByDate);
         return ResponseEntity.status(HttpStatus.OK).body(winningNumberDto);
     }
@@ -40,11 +40,5 @@ public class WinningNumbersController {
     @PostMapping("/generateWinningNumbers")
     public WinningNumbersDto generateLottoWinningNumbers(@RequestBody LocalDateTime drawDate) throws JsonProcessingException {
         return numberGeneratorFacade.generateLottoWinningNumbers(drawDate);
-    }
-
-    @PostMapping("/save")
-    public String saveWinningNumbers(@RequestBody WinningNumbers winningNumbers) {
-        repository.save(winningNumbers);
-        return "Dane zapisane pomyślnie";
     }
 }
