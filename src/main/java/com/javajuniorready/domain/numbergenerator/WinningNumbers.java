@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 @Document(collection = "winning_numbers")
 public record WinningNumbers(
         @Id
-        int id,
+        ObjectId id,
         LocalDateTime WinningNumbersDrawDate,
-        WinningNumbersSet winningNumbersSet) {}
+        WinningNumbersSet winningNumbersSet) {
+
+}

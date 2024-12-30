@@ -25,7 +25,7 @@ public class NumberGeneratorFacade {
             throw new IllegalStateException("Unable to generate winning numbers.");
         }
 
-        WinningNumbers winningNumbersSaved = winningNumberRepository.saveWinningNumbers(winningNumbers);
+        WinningNumbers winningNumbersSaved = winningNumberRepository.save(winningNumbers);
         logger.info("Winning numbers saved: {}", winningNumbersSaved);
 
         if (winningNumbersSaved == null) {
