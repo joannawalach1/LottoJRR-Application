@@ -1,11 +1,14 @@
 package com.javajuniorready.domain.numbergenerator;
 
 import com.javajuniorready.domain.numbergenerator.dto.WinningNumbersDto;
+import org.bson.types.ObjectId;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class WinningNumbersMapper {
+    private static ObjectId counter;
+
     public static WinningNumbers toWinningNumberEntity(WinningNumbersDto winningNumbersDto) {
         return WinningNumbers.builder()
                 .id(winningNumbersDto.id())
@@ -16,7 +19,7 @@ public class WinningNumbersMapper {
 
     public static WinningNumbersDto toWinningNumberDto(WinningNumbers winningNumbers) {
         return WinningNumbersDto.builder()
-                .id(winningNumbers.id())
+                .id(counter)
                 .WinningNumbersDrawDate(winningNumbers.WinningNumbersDrawDate())
                 .winningNumbersSet(winningNumbers.winningNumbersSet())
                 .build();

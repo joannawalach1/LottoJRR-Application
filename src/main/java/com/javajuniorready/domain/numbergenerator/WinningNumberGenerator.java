@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javajuniorready.infrastructure.numbergenerator.http.WinningNumbersFetcher;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
@@ -16,7 +15,6 @@ import java.util.Set;
 public class WinningNumberGenerator {
     private static final Logger logger = LoggerFactory.getLogger(WinningNumberGenerator.class);
     private final WinningNumbersFetcher winningNumbersFetcher = new WinningNumbersFetcher(new RestTemplate());
-    private ObjectId counter;
 
     public WinningNumbers generateWinningNumbers(LocalDateTime lottoDrawDate) throws JsonProcessingException {
             String responseData = winningNumbersFetcher.fetchApiData("http://www.randomnumberapi.com:80/api/v1.0/random?min=1&max=99&count=6");
@@ -32,7 +30,6 @@ public class WinningNumberGenerator {
 
             logger.info("Set of numbers: {}", numbersSet);
             WinningNumbers winningNumbers = WinningNumbers.builder()
-                    .id(counter)
                     .WinningNumbersDrawDate(lottoDrawDate)
                     .winningNumbersSet(numbersSet)
                     .build();

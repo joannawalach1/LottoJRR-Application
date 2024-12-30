@@ -21,6 +21,7 @@ public class NumberGeneratorFacadeTest {
     private final InMemoryWinningNumbersRepositoryImpl winningNumbersRepository = new InMemoryWinningNumbersRepositoryImpl();
     private final WinningNumberGenerator winningNumbersGenerator= new WinningNumberGenerator();
     NumberGeneratorFacade numberGeneratorFacade = new NumberGeneratorFacade(
+            winningNumbersGenerator,
             winningNumbersRepository,
             numberReceiverFacade
     );

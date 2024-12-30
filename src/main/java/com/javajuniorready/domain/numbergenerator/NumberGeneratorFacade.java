@@ -14,12 +14,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class NumberGeneratorFacade {
     private static final Logger logger = LoggerFactory.getLogger(NumberGeneratorFacade.class);
-    private final WinningNumberGenerator winningNumberGenerator = new WinningNumberGenerator();
+    private final WinningNumberGenerator winningNumberGenerator;
     private final WinningNumbersRepository winningNumberRepository;
     private final NumberReceiverFacade numberReceiverFacade;
 
     public WinningNumbersDto generateLottoWinningNumbers(LocalDateTime lottoDrawDate) throws JsonProcessingException {
         logger.info("Generating winning numbers for draw date: {}", lottoDrawDate);
+
         WinningNumbers winningNumbers = winningNumberGenerator.generateWinningNumbers(lottoDrawDate);
 
         if (winningNumbers == null) {
@@ -29,6 +30,11 @@ public class NumberGeneratorFacade {
 
         WinningNumbers winningNumbersSaved = winningNumberRepository.save(winningNumbers);
         logger.info("Winning numbers saved: {}", winningNumbersSaved);
+
+        if (winningNumbersSaved == null) {
+            logger.error("Failed to save winning numbers.");
+            throw new IllegalStateException("Unable to save winning numbers.");
+        }
 
         WinningNumbersDto winningNumberDto = WinningNumbersMapper.toWinningNumberDto(winningNumbersSaved);
         logger.info("WinningNumbers with id:{} created: {}", winningNumbersSaved.id(), winningNumbersSaved);

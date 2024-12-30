@@ -16,15 +16,11 @@ import java.util.function.Function;
 public class InMemoryWinningNumbersRepositoryImpl implements WinningNumbersRepository {
     private final List<WinningNumbers> winningNumbersDatabase = new ArrayList<>();
 
-    @Override
-    public WinningNumbers saveWinningNumbers(WinningNumbers winningNumbers) {
-        winningNumbersDatabase.add(winningNumbers);
-        return winningNumbers;
-    }
 
     @Override
     public <S extends WinningNumbers> S save(S entity) {
-        return null;
+        winningNumbersDatabase.add(entity);
+        return entity;
     }
 
     @Override

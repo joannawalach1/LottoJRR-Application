@@ -18,6 +18,7 @@ public class NumberGeneratorConfiguration {
     public NumberGeneratorFacade numberGeneratorFacade(WinningNumbersRepository winningNumbersRepository, NumberReceiverFacade numberReceiverFacade) {
         WinningNumberGenerator winningNumberGenerator = new WinningNumberGenerator();
         return new NumberGeneratorFacade(
+                winningNumberGenerator,
                 winningNumbersRepository,
                 numberReceiverFacade
         );
