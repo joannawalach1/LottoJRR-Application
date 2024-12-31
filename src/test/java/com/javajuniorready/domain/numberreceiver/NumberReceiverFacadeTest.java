@@ -79,7 +79,7 @@ public class NumberReceiverFacadeTest {
         Ticket ticket = numberReceiverFacade.createTicket(ticketDto);
 
         assertNotNull(ticket.lottoDrawDate());
-        //assertTrue(ticketDto.lottoDrawDate().isAfter(ticket.lottoDrawDate()));
+        assertTrue(ticketDto.lottoDrawDate().isAfter(ticket.lottoDrawDate()));
     }
 
     @Test

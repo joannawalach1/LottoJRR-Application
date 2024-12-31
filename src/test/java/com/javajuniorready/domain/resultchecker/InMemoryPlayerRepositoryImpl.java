@@ -6,11 +6,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
 public class InMemoryPlayerRepositoryImpl implements PlayerRepository<Player, Integer> {
+    private final List<Player> playersDatabase = new ArrayList<>();
 
     @Override
     public <S extends Player> S save(S entity) {
@@ -23,12 +25,12 @@ public class InMemoryPlayerRepositoryImpl implements PlayerRepository<Player, In
     }
 
     @Override
-    public Optional<Player> findById(String s) {
+    public Optional<Player> findById(Integer integer) {
         return Optional.empty();
     }
 
     @Override
-    public boolean existsById(String s) {
+    public boolean existsById(Integer integer) {
         return false;
     }
 
@@ -38,7 +40,7 @@ public class InMemoryPlayerRepositoryImpl implements PlayerRepository<Player, In
     }
 
     @Override
-    public Iterable<Player> findAllById(Iterable<String> strings) {
+    public Iterable<Player> findAllById(Iterable<Integer> integers) {
         return null;
     }
 
@@ -48,7 +50,7 @@ public class InMemoryPlayerRepositoryImpl implements PlayerRepository<Player, In
     }
 
     @Override
-    public void deleteById(String s) {
+    public void deleteById(Integer integer) {
 
     }
 
@@ -58,7 +60,7 @@ public class InMemoryPlayerRepositoryImpl implements PlayerRepository<Player, In
     }
 
     @Override
-    public void deleteAllById(Iterable<? extends String> strings) {
+    public void deleteAllById(Iterable<? extends Integer> integers) {
 
     }
 

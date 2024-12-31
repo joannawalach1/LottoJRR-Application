@@ -7,9 +7,6 @@ import java.util.stream.Collectors;
 
 public class ResultCheckerMapper {
     public static List<Player> toPlayerEntity(List<PlayerDto> winners) {
-        if (winners == null || winners.isEmpty()) {
-            throw new IllegalArgumentException("Winners list cannot be null or empty.");
-        }
         return winners.stream()
                 .map(winner -> Player.builder()
                         .build())

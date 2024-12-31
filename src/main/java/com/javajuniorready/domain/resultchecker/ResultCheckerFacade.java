@@ -20,7 +20,7 @@ public class ResultCheckerFacade {
 
     private final NumberGeneratorFacade numberGeneratorFacade;
     private final NumberReceiverFacade numberReceiverFacade;
-    private final PlayerRepository<Player, Number> playerRepository;
+    private final PlayerRepository playerRepository;
 
     public List<PlayerDto> generateResults(int ticketId, LocalDateTime drawDate) {
         logger.info("Generating results for ticket ID: {} and draw date: {}", ticketId, drawDate);
@@ -42,6 +42,9 @@ public class ResultCheckerFacade {
 
         Set<Integer> matchingNumbers = getMatchingNumbers(winningNumbers, userNumbers);
         logger.info("Matching numbers: {}", matchingNumbers);
+        if (matchingNumbers.isEmpty()) {
+            logger.error("No matching numbers found for draw date: {}", drawDate);
+        }
 
         int matchingCount = matchingNumbers.size();
         logger.info("Number of matches: {}", matchingCount);
