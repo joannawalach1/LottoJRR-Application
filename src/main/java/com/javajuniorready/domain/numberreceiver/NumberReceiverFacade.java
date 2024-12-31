@@ -41,16 +41,15 @@ public class NumberReceiverFacade {
                 .lottoDrawDate(lottoDrawDate)
                 .build();
         numbersValidator.validateUserNumbers(ticketDto.sixNumbers());
-        Ticket savedTicket = numberTicketRepository.saveTickets(ticketEntity);
+        Ticket savedTicket = numberTicketRepository.save(ticketEntity);
         logger.info("Ticket with id:{} created: {}", ticketDto.id(), savedTicket);
         return savedTicket;
     }
 
     public Ticket findTicketById(int id) {
-        return numberTicketRepository.findTicketById(id)
+        return numberTicketRepository.findById(id)
                 .orElseThrow(() -> new TicketNotFoundException("Ticket with id " + id + " not found"));
     }
-
 
     public List<Ticket> findAll() {
         List<Ticket> allTickets = numberTicketRepository.findAll();

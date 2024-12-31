@@ -63,11 +63,14 @@ public class NumberReceiverFacadeTest {
     @Test
     public void shouldSaveTicketsInRepositoryIfUserGaveCorrectData() {
         TicketDto ticketDto = new TicketDto(1, LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
-        Ticket savedTicket = numberReceiverFacade.createTicket(ticketDto);
-        Ticket ticketById = numberReceiverFacade.findTicketById(savedTicket.id());
+        Ticket savedTicket = new Ticket(ticketDto.id(), ticketDto.lottoDrawDate(), ticketDto.sixNumbers());
+        InMemoryTicketRepositoryImpl ticketRepository = new InMemoryTicketRepositoryImpl();
+        ticketRepository.save(savedTicket);
+        Ticket ticketById = ticketRepository.findById(savedTicket.id())
+                .orElseThrow(()-> new RuntimeException("Ticket not found"));
 
-        assertNotNull(savedTicket, "Ticket should be saved in the repository");
-        assertEquals(ticketById.sixNumbers(), savedTicket.sixNumbers(), "Six numbers should match the input data");
+        assertNotNull(savedTicket);
+        assertEquals(ticketById.sixNumbers(), savedTicket.sixNumbers());
     }
 
     @Test

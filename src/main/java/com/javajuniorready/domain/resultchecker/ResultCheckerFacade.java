@@ -20,7 +20,7 @@ public class ResultCheckerFacade {
 
     private final NumberGeneratorFacade numberGeneratorFacade;
     private final NumberReceiverFacade numberReceiverFacade;
-    private final PlayerRepository playerRepository;
+    private final PlayerRepository<Player, Number> playerRepository;
 
     public List<PlayerDto> generateResults(int ticketId, LocalDateTime drawDate) {
         logger.info("Generating results for ticket ID: {} and draw date: {}", ticketId, drawDate);
@@ -40,8 +40,7 @@ public class ResultCheckerFacade {
         Set<Integer> userNumbers = ticketById.sixNumbers().userNumbers();
         logger.info("Winning numbers: {}, User numbers: {}", winningNumbers, userNumbers);
 
-        List<Integer> matchingNumbers = new ArrayList<>(userNumbers);
-        matchingNumbers.retainAll(winningNumbers);
+        Set<Integer> matchingNumbers = getMatchingNumbers(winningNumbers, userNumbers);
         logger.info("Matching numbers: {}", matchingNumbers);
 
         int matchingCount = matchingNumbers.size();
@@ -72,5 +71,12 @@ public class ResultCheckerFacade {
 
         return winners;
     }
+
+    public Set<Integer> getMatchingNumbers(Set<Integer> winningNumbers, Set<Integer> ticketNumbers) {
+        Set<Integer> matchingNumbers = new HashSet<>(winningNumbers);
+        matchingNumbers.retainAll(ticketNumbers);
+        return matchingNumbers;
+    }
+
 
 }

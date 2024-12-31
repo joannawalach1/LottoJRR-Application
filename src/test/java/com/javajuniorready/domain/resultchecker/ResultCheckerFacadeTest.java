@@ -1,5 +1,9 @@
 package com.javajuniorready.domain.resultchecker;
 
-class ResultCheckerFacadeTest {
+import org.junit.jupiter.api.Test;
+
+public class ResultCheckerFacadeTest {
+    @Test
+    public void test() {}
 
 }
