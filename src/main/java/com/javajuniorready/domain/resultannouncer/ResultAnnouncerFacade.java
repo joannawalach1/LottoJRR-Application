@@ -19,26 +19,32 @@ public class ResultAnnouncerFacade {
     private final Clock clock;
 
     public ResultAnnouncerResponseDto checkResult(String hash) {
-        if (responseRepository.existsById(hash)) {
-            Optional<ResultResponse> resultResponseCached = responseRepository.findById(hash);
-            if (resultResponseCached.isPresent()) {
-                return new ResultAnnouncerResponseDto(ResultResponseMapper.mapToDto(resultResponseCached.get()), ALREADY_CHECKED.info);
-            }
+        Optional<ResultResponse> resultResponseCached = responseRepository.findById(hash);
+        if (resultResponseCached.isPresent()) {
+            return new ResultAnnouncerResponseDto(
+                    ResultResponseMapper.mapToDto(resultResponseCached.get()),
+                    ALREADY_CHECKED.info
+            );
         }
-        ResultDto resultDto = resultCheckerFacade.findWinnerByHash(hash);
+
+        ResultDto resultDto = resultCheckerFacade.findByTicketId(hash);
         if (resultDto == null) {
             return new ResultAnnouncerResponseDto(null, HASH_DOES_NOT_EXIST_MESSAGE.info);
         }
+
         ResponseDto responseDto = buildResponseDto(resultDto);
         responseRepository.save(buildResponse(responseDto, LocalDateTime.now(clock)));
-        if (responseRepository.existsById(hash) && !isAfterResultAnnouncementTime(resultDto)) {
+
+        if (!isAfterResultAnnouncementTime(resultDto)) {
             return new ResultAnnouncerResponseDto(responseDto, WAIT_MESSAGE.info);
         }
-        if (resultCheckerFacade.findWinnerByHash(hash).isWinner()) {
+
+        if (resultDto.isWinner()) {
             return new ResultAnnouncerResponseDto(responseDto, WIN_MESSAGE.info);
         }
         return new ResultAnnouncerResponseDto(responseDto, LOSE_MESSAGE.info);
     }
+
 
     private static ResultResponse buildResponse(ResponseDto responseDto, LocalDateTime now) {
         return ResultResponse.builder()
@@ -68,3 +74,4 @@ public class ResultAnnouncerFacade {
         return LocalDateTime.now(clock).isAfter(announcementDateTime);
     }
 }
+

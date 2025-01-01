@@ -131,7 +131,7 @@ public class InMemoryPlayerRepositoryImpl implements PlayerRepository<Player, In
     }
 
     @Override
-    public ResultDto findById(String id) {
-        return null;
+    public Optional<Player> findById(String ticketId) {
+        return playersDatabase.stream().findFirst();
     }
 }

@@ -1,8 +1,7 @@
 package com.javajuniorready.resultannouncer;
 
+import com.javajuniorready.domain.resultannouncer.ResultAnnouncerConfiguration;
 import com.javajuniorready.domain.resultannouncer.ResultAnnouncerFacade;
-import com.javajuniorready.domain.resultannouncer.ResultResponse;
-import com.javajuniorready.domain.resultannouncer.dto.ResponseDto;
 import com.javajuniorready.domain.resultannouncer.dto.ResultAnnouncerResponseDto;
 import com.javajuniorready.domain.resultchecker.ResultCheckerFacade;
 import com.javajuniorready.domain.resultchecker.dto.ResultDto;
@@ -13,189 +12,74 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import static com.javajuniorready.domain.resultannouncer.MessageResponse.*;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 public class ResultAnnouncerFacadeTest {
-    private final InMemoryResponseRepositoryImpl responseRepository = new InMemoryResponseRepositoryImpl();
+    private final InMemoryResponseRepositoryTestImpl responseRepository = new InMemoryResponseRepositoryTestImpl();
     private final ResultCheckerFacade resultCheckerFacade = mock(ResultCheckerFacade.class);
     private final Clock clock = Clock.systemDefaultZone();
-    private final ResultAnnouncerFacade resultAnnouncerFacade = new ResultAnnouncerFacade(
-            resultCheckerFacade,
-            responseRepository,
-            clock
-    );
 
     @Test
-    void should_return_already_checked_message_when_result_exists_in_repository() {
-        String hash = "12345678";
-        ResultResponse resultResponse = ResultResponse.builder()
-                .hash(hash)
-                .results(Set.of(1, 2, 3, 4, 5, 6))
-                .hitNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .wonNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .drawDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
-                .isWinner(true)
-                .createdDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
-                .build();
+    public void it_should_return_response_with_hash_does_not_exist_message_if_hash_does_not_exist() {
+        //given
+        String hash = "123";
+        ResultAnnouncerFacade resultAnnouncerFacade = new ResultAnnouncerConfiguration().resultAnnouncerFacade(resultCheckerFacade, responseRepository, Clock.systemUTC());
 
-        responseRepository.save(resultResponse);
-
-        ResultAnnouncerResponseDto response = resultAnnouncerFacade.checkResult(hash);
-
-        assertEquals(HASH_DOES_NOT_EXIST_MESSAGE.info, response.message());
+        when(resultCheckerFacade.findByTicketId(hash)).thenReturn(null);
+        //when
+        ResultAnnouncerResponseDto resultAnnouncerResponseDto = resultAnnouncerFacade.checkResult(hash);
+        //then
+        ResultAnnouncerResponseDto expectedResult = new ResultAnnouncerResponseDto(null, HASH_DOES_NOT_EXIST_MESSAGE.info);
+        assertThat(resultAnnouncerResponseDto).isEqualTo(expectedResult);
     }
 
     @Test
-    void should_return_hash_does_not_exist_message_when_no_result_found() {
-        String hash = "non_existing_hash";
-
-        ResultResponse resultResponse = ResultResponse.builder()
-                .hash(hash)
-                .results(Set.of(1, 2, 3, 4, 5, 6))
-                .hitNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .wonNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .drawDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
-                .isWinner(true)
-                .createdDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
-                .build();
-
-        responseRepository.save(resultResponse);
-
-        ResultAnnouncerResponseDto response = resultAnnouncerFacade.checkResult(hash);
-
-        assertEquals(HASH_DOES_NOT_EXIST_MESSAGE.info, response.message());
-    }
-
-    @Test
-    void should_return_wait_message_when_result_is_not_after_announcement_time() {
-        String hash = "some_hash";
-
-        ResponseDto responseDto = ResponseDto.builder()
-                .hash("12345678")
-                .results(Set.of(1, 2, 3, 4, 5, 6))
-                .hitNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .results(Set.of(1, 2, 3, 4, 5, 6))
-                .wonNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .drawDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
-                .isWinner(true)
-                .build();
-
-        ResultResponse resultResponse = ResultResponse.builder()
-                .hash(responseDto.hash())
-                .results(responseDto.results())
-                .hitNumbers(responseDto.hitNumbers())
-                .wonNumbers(responseDto.wonNumbers())
-                .createdDate(responseDto.drawDate())
-                .drawDate(responseDto.drawDate())
-                .isWinner(responseDto.isWinner())
-                .build();
-
+    public void it_should_return_response_with_hash_does_not_exist_message_if_response_is_not_saved_to_db_yet() {
+        //given
+        LocalDateTime drawDate = LocalDateTime.of(2022, 12, 17, 12, 0, 0);
+        String hash = "123";
         ResultDto resultDto = ResultDto.builder()
-                .hash("12345678")
+                .hash("123")
                 .result(Set.of(1, 2, 3, 4, 5, 6))
-                .hitNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .userNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .hitNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .wonNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .lottoDrawDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
+                .hitNumbers(Set.of(1, 2, 3, 4, 9, 0))
+                .lottoDrawDate(drawDate)
                 .isWinner(true)
                 .build();
-        responseRepository.save(resultResponse);
+        when(resultCheckerFacade.findByTicketId(hash)).thenReturn(resultDto);
 
-        ResultAnnouncerResponseDto response = resultAnnouncerFacade.checkResult(hash);
-
-        assertEquals(HASH_DOES_NOT_EXIST_MESSAGE.info, response.message());
+        ResultAnnouncerFacade resultAnnouncerFacade = new ResultAnnouncerConfiguration().resultAnnouncerFacade(resultCheckerFacade, responseRepository, Clock.systemUTC());
+        ResultAnnouncerResponseDto resultAnnouncerResponseDto1 = resultAnnouncerFacade.checkResult(hash);
+        String underTest = resultAnnouncerResponseDto1.responseDto().hash();
+        //when
+        ResultAnnouncerResponseDto resultAnnouncerResponseDto = resultAnnouncerFacade.checkResult(underTest);
+        //then
+        ResultAnnouncerResponseDto expectedResult = new ResultAnnouncerResponseDto(
+                resultAnnouncerResponseDto.responseDto()
+                , ALREADY_CHECKED.info);
+        assertThat(resultAnnouncerResponseDto).isEqualTo(expectedResult);
     }
 
     @Test
-    void should_return_win_message_when_result_is_winner() {
-        String hash = "some_hash";
-        ResponseDto responseDto = ResponseDto.builder()
-                .hash("12345678")
-                .results(Set.of(1, 2, 3, 4, 5, 6))
-                .hitNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .results(Set.of(1, 2, 3, 4, 5, 6))
-                .wonNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .drawDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
-                .isWinner(true)
-                .build();
-
-        ResultResponse resultResponse = ResultResponse.builder()
-                .hash(responseDto.hash())
-                .results(responseDto.results())
-                .hitNumbers(responseDto.hitNumbers())
-                .wonNumbers(responseDto.wonNumbers())
-                .createdDate(responseDto.drawDate())
-                .drawDate(responseDto.drawDate())
-                .isWinner(responseDto.isWinner())
-                .build();
-
+    public void it_should_return_lose_message_if_winner_doesnt_exist() {
+        //given
+        LocalDateTime drawDate = LocalDateTime.of(2022, 12, 17, 12, 0, 0);
+        String hash = "123";
         ResultDto resultDto = ResultDto.builder()
-                .hash("12345678")
+                .hash("123")
                 .result(Set.of(1, 2, 3, 4, 5, 6))
-                .hitNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .userNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .hitNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .wonNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .lottoDrawDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
-                .isWinner(true)
+                .hitNumbers(Set.of(7, 8, 9, 10, 11, 12))
+                .lottoDrawDate(drawDate)
+                .isWinner(false)
                 .build();
-        responseRepository.save(resultResponse);
+        when(resultCheckerFacade.findByTicketId(hash)).thenReturn(resultDto);
 
-        ResultAnnouncerResponseDto response = resultAnnouncerFacade.checkResult(hash);
-
-        assertEquals(HASH_DOES_NOT_EXIST_MESSAGE.info, response.message());
-    }
-
-    @Test
-    void should_return_lose_message_when_result_is_not_winner() {
-        String hash = "some_hash";
-        ResultResponse resultResponse = ResultResponse.builder()
-                .hash(hash)
-                .results(Set.of(1, 2, 3, 4, 5, 6))
-                .hitNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .wonNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .drawDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
-                .isWinner(true)
-                .createdDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
-                .build();
-
-        responseRepository.save(resultResponse);
-
-        ResultAnnouncerResponseDto response = resultAnnouncerFacade.checkResult(hash);
-
-        assertEquals(HASH_DOES_NOT_EXIST_MESSAGE.info, response.message());
-    }
-
-    @Test
-    void should_save_response_to_repository_when_result_is_checked() {
-        String hash = "some_hash";
-        ResultDto resultDto = ResultDto.builder()
-                .hash("12345678")
-                .result(Set.of(1, 2, 3, 4, 5, 6))
-                .hitNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .userNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .hitNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .wonNumbers(Set.of(1, 2, 3, 4, 5, 6))
-                .lottoDrawDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
-                .isWinner(true)
-                .build();
-
-        ResultResponse resultResponse = ResultResponse.builder()
-                .hash(resultDto.hash())
-                .results(resultDto.result())
-                .hitNumbers(resultDto.hitNumbers())
-                .wonNumbers(resultDto.wonNumbers())
-                .createdDate(LocalDateTime.of(2025, 1, 1, 12, 0, 0))
-                .drawDate(resultDto.lottoDrawDate())
-                .isWinner(resultDto.isWinner())
-                .build();
-
-        responseRepository.save(resultResponse);
-
-        ResultAnnouncerResponseDto response = resultAnnouncerFacade.checkResult(hash);
-
-        assertEquals(HASH_DOES_NOT_EXIST_MESSAGE.info, response.message());
+        ResultAnnouncerFacade resultAnnouncerFacade = new ResultAnnouncerConfiguration().resultAnnouncerFacade(resultCheckerFacade, responseRepository, Clock.systemUTC());
+        ResultAnnouncerResponseDto resultAnnouncerResponseDto1 = resultAnnouncerFacade.checkResult(hash);
+        //then
+        ResultAnnouncerResponseDto expectedResult = new ResultAnnouncerResponseDto(
+                resultAnnouncerResponseDto1.responseDto()
+                ,LOSE_MESSAGE.info);
+        assertThat(resultAnnouncerResponseDto1).isEqualTo(expectedResult);
     }
 }

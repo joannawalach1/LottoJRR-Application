@@ -1,6 +1,5 @@
 package com.javajuniorready.resultannouncer;
 
-import com.javajuniorready.domain.numberreceiver.Ticket;
 import com.javajuniorready.domain.resultannouncer.ResponseRepository;
 import com.javajuniorready.domain.resultannouncer.ResultResponse;
 import org.springframework.data.domain.Example;
@@ -9,48 +8,38 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
-public class InMemoryResponseRepositoryImpl implements ResponseRepository {
-    private final List<ResultResponse> responseDatabase = new ArrayList<>();
+public class InMemoryResponseRepositoryTestImpl implements ResponseRepository {
 
+    private final Map<String, ResultResponse> responseList = new ConcurrentHashMap<>();
 
     @Override
-    public boolean existById(String hash) {
-        return false;
+    public ResultResponse save(ResultResponse resultResponse) {
+        return responseList.put(resultResponse.hash(), resultResponse);
     }
 
     @Override
-    public Optional<ResultResponse> findByHash(String hash) {
-        return Optional.empty();
+    public Optional<ResultResponse> findById(String hash) {
+        return Optional.ofNullable(responseList.get(hash));
     }
 
     @Override
-    public <S extends ResultResponse> S save(S entity) {
+    public boolean existsById(String hash) {
+        return responseList.containsKey(hash);
+    }
+
+
+    @Override
+    public <S extends ResultResponse> List<S> saveAll(Iterable<S> entities) {
         return null;
     }
 
     @Override
-    public <S extends ResultResponse> List<S> saveAll(Iterable<S> entities) {
-        return List.of();
-    }
-
-    @Override
-    public Optional<ResultResponse> findById(String s) {
-        return Optional.empty();
-    }
-
-    @Override
-    public boolean existsById(String s) {
-        return false;
-    }
-
-    @Override
     public List<ResultResponse> findAll() {
-        return List.of();
+        return null;
     }
 
     @Override
@@ -90,7 +79,7 @@ public class InMemoryResponseRepositoryImpl implements ResponseRepository {
 
     @Override
     public List<ResultResponse> findAll(Sort sort) {
-        return List.of();
+        return null;
     }
 
     @Override
@@ -105,7 +94,7 @@ public class InMemoryResponseRepositoryImpl implements ResponseRepository {
 
     @Override
     public <S extends ResultResponse> List<S> insert(Iterable<S> entities) {
-        return List.of();
+        return null;
     }
 
     @Override
@@ -115,12 +104,12 @@ public class InMemoryResponseRepositoryImpl implements ResponseRepository {
 
     @Override
     public <S extends ResultResponse> List<S> findAll(Example<S> example) {
-        return List.of();
+        return null;
     }
 
     @Override
     public <S extends ResultResponse> List<S> findAll(Example<S> example, Sort sort) {
-        return List.of();
+        return null;
     }
 
     @Override

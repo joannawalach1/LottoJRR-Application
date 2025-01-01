@@ -83,7 +83,16 @@ public class ResultCheckerFacade {
     }
 
 
-    public ResultDto findWinnerByHash(String hash) {
-        return playerRepository.findById(hash);
+    public ResultDto findByTicketId(String ticketId) {
+        Player player = playerRepository.findById(ticketId)
+                .orElseThrow(() -> new PlayerResultNotFoundException("Not found for id: " + ticketId));
+        return ResultDto.builder()
+                .hash(ticketId)
+                .result(player.userNumbers())
+                .hitNumbers(player.hitNumbers())
+                .lottoDrawDate(player.lottoDrawDate())
+                .wonNumbers(player.wonNumbers())
+                .isWinner(player.isWinner())
+                .build();
     }
 }
