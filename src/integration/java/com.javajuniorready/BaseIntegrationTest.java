@@ -35,13 +35,11 @@ public class BaseIntegrationTest {
     @Autowired
     public ObjectMapper objectMapper;
 
-//    @Autowired
-//    public AdjustableClock clock;
-
     @RegisterExtension
     public static WireMockExtension wireMockServer = WireMockExtension.newInstance()
             .options(wireMockConfig().dynamicPort())
             .build();
+
 
     @DynamicPropertySource
     public static void propertyOverride(DynamicPropertyRegistry registry) {

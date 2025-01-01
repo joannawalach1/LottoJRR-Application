@@ -1,5 +1,6 @@
 package com.javajuniorready.domain.resultchecker;
 
+import com.javajuniorready.domain.resultchecker.dto.ResultDto;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -126,6 +127,11 @@ public class InMemoryPlayerRepositoryImpl implements PlayerRepository<Player, In
 
     @Override
     public <S extends Player, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+        return null;
+    }
+
+    @Override
+    public ResultDto findById(String id) {
         return null;
     }
 }
