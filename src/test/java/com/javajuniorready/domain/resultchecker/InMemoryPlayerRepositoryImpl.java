@@ -1,6 +1,7 @@
 package com.javajuniorready.domain.resultchecker;
 
 import com.javajuniorready.domain.resultchecker.dto.ResultDto;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -131,7 +132,7 @@ public class InMemoryPlayerRepositoryImpl implements PlayerRepository {
     }
 
     @Override
-    public Optional<Player> findByHash(String ticketId) {
+    public Optional<Player> findByHash(ObjectId ticketId) {
         return playersDatabase.stream().findFirst();
     }
 }

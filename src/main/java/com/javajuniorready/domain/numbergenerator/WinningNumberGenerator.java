@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javajuniorready.infrastructure.numbergenerator.http.WinningNumbersFetcher;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
@@ -30,6 +31,7 @@ public class WinningNumberGenerator {
 
             logger.info("Set of numbers: {}", numbersSet);
             WinningNumbers winningNumbers = WinningNumbers.builder()
+                    .id(new ObjectId())
                     .WinningNumbersDrawDate(lottoDrawDate)
                     .winningNumbersSet(numbersSet)
                     .build();

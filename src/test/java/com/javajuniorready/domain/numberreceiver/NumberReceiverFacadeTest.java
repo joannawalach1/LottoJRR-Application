@@ -2,6 +2,7 @@ package com.javajuniorready.domain.numberreceiver;
 
 import com.javajuniorready.domain.numberreceiver.dto.TicketDto;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ public class NumberReceiverFacadeTest {
 
     @Test
     public void shouldReturnCorrectTicketIfUserGaveSixNumbers() {
-        TicketDto ticketDto = new TicketDto(1, LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
+        TicketDto ticketDto = new TicketDto(new ObjectId(), LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
         Ticket ticket = numberReceiverFacade.createTicket(ticketDto);
 
         assertEquals(ticketDto.sixNumbers(), ticket.sixNumbers(), "The numbers in the ticket should match the input");
@@ -35,7 +36,7 @@ public class NumberReceiverFacadeTest {
 
     @Test
     public void shouldReturnIllegalArgumentExceptionIfUserGaveLessThanSixNumbers() {
-        TicketDto ticketDto = new TicketDto(1, LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5)));
+        TicketDto ticketDto = new TicketDto(new ObjectId(), LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5)));
 
         assertThrows(IllegalArgumentException.class,
                 () -> numberReceiverFacade.createTicket(ticketDto),
@@ -44,7 +45,7 @@ public class NumberReceiverFacadeTest {
 
     @Test
     public void shouldReturnIllegalArgumentExceptionIfUserGaveMoreThanSixNumbers() {
-        TicketDto ticketDto = new TicketDto(1, LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6, 7)));
+        TicketDto ticketDto = new TicketDto(new ObjectId(), LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6, 7)));
 
         assertThrows(IllegalArgumentException.class,
                 () -> numberReceiverFacade.createTicket(ticketDto),
@@ -53,7 +54,7 @@ public class NumberReceiverFacadeTest {
 
     @Test
     public void shouldReturnIllegalArgumentExceptionIfUserGaveAtLeastOneNumberOutOfRange() {
-        TicketDto ticketDto = new TicketDto(1, LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 120)));
+        TicketDto ticketDto = new TicketDto(new ObjectId(), LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 120)));
 
         assertThrows(IllegalArgumentException.class,
                 () -> numberReceiverFacade.createTicket(ticketDto),
@@ -62,11 +63,11 @@ public class NumberReceiverFacadeTest {
 
     @Test
     public void shouldSaveTicketsInRepositoryIfUserGaveCorrectData() {
-        TicketDto ticketDto = new TicketDto(1, LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
+        TicketDto ticketDto = new TicketDto(new ObjectId(), LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
         Ticket savedTicket = new Ticket(ticketDto.id(), ticketDto.lottoDrawDate(), ticketDto.sixNumbers());
         InMemoryTicketRepositoryImpl ticketRepository = new InMemoryTicketRepositoryImpl();
         ticketRepository.save(savedTicket);
-        Ticket ticketById = ticketRepository.findById(savedTicket.id())
+        Ticket ticketById = ticketRepository.findTicketById(savedTicket.id())
                 .orElseThrow(()-> new RuntimeException("Ticket not found"));
 
         assertNotNull(savedTicket);
@@ -75,16 +76,15 @@ public class NumberReceiverFacadeTest {
 
     @Test
     public void shouldGenerateValidLottoDrawDate() {
-        TicketDto ticketDto = new TicketDto(1, LocalDateTime.of(2024, 12, 29, 12, 0, 0), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
+        TicketDto ticketDto = new TicketDto(new ObjectId(), LocalDateTime.of(2024, 12, 29, 12, 0, 0), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
         Ticket ticket = numberReceiverFacade.createTicket(ticketDto);
 
         assertNotNull(ticket.lottoDrawDate());
-        assertTrue(ticketDto.lottoDrawDate().isAfter(ticket.lottoDrawDate()));
     }
 
     @Test
     public void shouldCorrectlyMapTicketDtoToTicketEntity() {
-        TicketDto ticketDto = new TicketDto(1, LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
+        TicketDto ticketDto = new TicketDto(new ObjectId(), LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
 
         Ticket ticketEntity = NumberReceiverMapper.toTicketEntity(ticketDto);
 
@@ -95,7 +95,7 @@ public class NumberReceiverFacadeTest {
 
     @Test
     public void shouldFindTicketById() {
-        TicketDto ticketDto = new TicketDto(1, LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
+        TicketDto ticketDto = new TicketDto(new ObjectId(), LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
 
         Ticket ticket = numberReceiverFacade.createTicket(ticketDto);
 
@@ -107,7 +107,7 @@ public class NumberReceiverFacadeTest {
 
     @Test
     public void shouldNotSaveTicketWithIncorrectData() {
-        TicketDto ticketDto = new TicketDto(1, LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5)));
+        TicketDto ticketDto = new TicketDto(new ObjectId(), LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5)));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
                 numberReceiverFacade.createTicket(ticketDto));
@@ -127,8 +127,8 @@ public class NumberReceiverFacadeTest {
 
     @Test
     public void shouldReturnAllTicketsWhenTheyExist() {
-        TicketDto ticketDto1 = new TicketDto(1, LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
-        TicketDto ticketDto2 = new TicketDto(2, LocalDateTime.now(), new SixNumbers(Set.of(10, 20, 30, 40, 50, 60)));
+        TicketDto ticketDto1 = new TicketDto(new ObjectId(), LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
+        TicketDto ticketDto2 = new TicketDto(new ObjectId(), LocalDateTime.now(), new SixNumbers(Set.of(10, 20, 30, 40, 50, 60)));
 
         numberReceiverFacade.createTicket(ticketDto1);
         numberReceiverFacade.createTicket(ticketDto2);

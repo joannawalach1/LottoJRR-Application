@@ -1,6 +1,7 @@
 package com.javajuniorready.domain.numberreceiver;
 
 import com.javajuniorready.domain.numberreceiver.dto.TicketDto;
+import org.bson.types.ObjectId;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,7 +10,7 @@ public class NumberReceiverMapper {
 
     public static Ticket toTicketEntity(TicketDto userTicket) {
         return Ticket.builder()
-                .id(userTicket.id())
+                .id(new ObjectId())
                 .lottoDrawDate(userTicket.lottoDrawDate())
                 .sixNumbers(userTicket.sixNumbers())
                 .build();

@@ -1,5 +1,6 @@
 package com.javajuniorready.domain.numberreceiver;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,11 +18,10 @@ public class InMemoryTicketRepositoryImpl implements NumberTicketRepository {
 
 
     @Override
-    public Optional<Ticket> findTicketById(Integer id) {
-        return Optional.ofNullable(ticketsDatabase.stream()
-                .filter(ticket -> ticket.id() == (id))
-                .findFirst()
-                .orElse(null));
+    public Optional<Ticket> findTicketById(ObjectId id) {
+        return ticketsDatabase.stream()
+                .filter(ticket -> ticket.id().equals(id))
+                .findFirst();
     }
 
     @Override
@@ -42,7 +42,12 @@ public class InMemoryTicketRepositoryImpl implements NumberTicketRepository {
     }
 
     @Override
-    public Optional<Ticket> findById(Integer id) {
+    public Optional<Ticket> findById(Integer integer) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Ticket> findById(String id) {
         return ticketsDatabase.stream().findFirst();
     }
 

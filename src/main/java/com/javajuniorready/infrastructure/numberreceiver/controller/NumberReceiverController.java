@@ -27,7 +27,7 @@ public class NumberReceiverController {
 
 
     @GetMapping("/ticket/{id}")
-    public ResponseEntity<TicketDto> findTicketById(@PathVariable Integer id) {
+    public ResponseEntity<TicketDto> findTicketById(@PathVariable int id) {
         Ticket ticketById = numberReceiverFacade.findTicketById(id);
         TicketDto ticketDto = NumberReceiverMapper.toTicketDto(ticketById);
         return ResponseEntity.status(HttpStatus.OK).body(ticketDto);

@@ -27,6 +27,7 @@ public class NumberGeneratorFacade {
             logger.error("Failed to generate winning numbers for date: {}", lottoDrawDate);
             throw new IllegalStateException("Unable to generate winning numbers.");
         }
+        winningNumbers = winningNumbers.withGeneratedId();
 
         WinningNumbers winningNumbersSaved = winningNumberRepository.save(winningNumbers);
         logger.info("Winning numbers saved: {}", winningNumbersSaved);

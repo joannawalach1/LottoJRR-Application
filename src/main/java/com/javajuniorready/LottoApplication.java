@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableMongoRepositories(basePackages = {"com.javajuniorready.domain.numbergenerator",
         "com.javajuniorready.domain.resultchecker",
         "com.javajuniorready.domain.numberreceiver",
-        "com.javajuniorready.domain.result-announcer"})
+        "com.javajuniorready.domain.resultannouncer"})
 public class LottoApplication {
 
     public static void main(String[] args) {

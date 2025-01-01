@@ -2,6 +2,7 @@ package com.javajuniorready.resultannouncer;
 
 import com.javajuniorready.domain.resultannouncer.ResponseRepository;
 import com.javajuniorready.domain.resultannouncer.ResultResponse;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +15,7 @@ import java.util.function.Function;
 
 public class InMemoryResponseRepositoryTestImpl implements ResponseRepository {
 
-    private final Map<String, ResultResponse> responseList = new ConcurrentHashMap<>();
+    private final Map<ObjectId, ResultResponse> responseList = new ConcurrentHashMap<>();
 
     @Override
     public ResultResponse save(ResultResponse resultResponse) {
@@ -22,12 +23,12 @@ public class InMemoryResponseRepositoryTestImpl implements ResponseRepository {
     }
 
     @Override
-    public Optional<ResultResponse> findById(String hash) {
+    public Optional<ResultResponse> findById(ObjectId hash) {
         return Optional.ofNullable(responseList.get(hash));
     }
 
     @Override
-    public boolean existsById(String hash) {
+    public boolean existsById(ObjectId hash) {
         return responseList.containsKey(hash);
     }
 
@@ -43,7 +44,7 @@ public class InMemoryResponseRepositoryTestImpl implements ResponseRepository {
     }
 
     @Override
-    public Iterable<ResultResponse> findAllById(Iterable<String> strings) {
+    public Iterable<ResultResponse> findAllById(Iterable<ObjectId> objectIds) {
         return null;
     }
 
@@ -53,9 +54,10 @@ public class InMemoryResponseRepositoryTestImpl implements ResponseRepository {
     }
 
     @Override
-    public void deleteById(String s) {
+    public void deleteById(ObjectId objectId) {
 
     }
+
 
     @Override
     public void delete(ResultResponse entity) {
@@ -63,7 +65,7 @@ public class InMemoryResponseRepositoryTestImpl implements ResponseRepository {
     }
 
     @Override
-    public void deleteAllById(Iterable<? extends String> strings) {
+    public void deleteAllById(Iterable<? extends ObjectId> objectIds) {
 
     }
 

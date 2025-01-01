@@ -8,6 +8,7 @@ import com.javajuniorready.domain.numberreceiver.Ticket;
 import com.javajuniorready.domain.resultchecker.dto.PlayerDto;
 import com.javajuniorready.domain.resultchecker.dto.ResultDto;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,7 @@ public class ResultCheckerFacade {
     private final NumberGeneratorFacade numberGeneratorFacade;
     private final NumberReceiverFacade numberReceiverFacade;
     private final PlayerRepository playerRepository;
+    private final WinnersRetriever winnerGenerator;
 
     public List<PlayerDto> generateResults(int ticketId, LocalDateTime drawDate) {
         logger.info("Generating results for ticket ID: {} and draw date: {}", ticketId, drawDate);
@@ -83,11 +85,11 @@ public class ResultCheckerFacade {
     }
 
 
-    public ResultDto findByTicketId(String ticketId) {
+    public ResultDto findByTicketId(ObjectId ticketId) {
         Player player = playerRepository.findByHash(ticketId)
                 .orElseThrow(() -> new PlayerResultNotFoundException("Not found for id: " + ticketId));
         return ResultDto.builder()
-                .hash(ticketId)
+                .hash(ticketId.toString())
                 .result(player.userNumbers())
                 .hitNumbers(player.hitNumbers())
                 .lottoDrawDate(player.lottoDrawDate())

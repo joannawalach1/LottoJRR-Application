@@ -8,6 +8,7 @@ import com.javajuniorready.domain.numberreceiver.NumberReceiverFacade;
 import com.javajuniorready.domain.numberreceiver.SixNumbers;
 import com.javajuniorready.domain.numberreceiver.Ticket;
 import com.javajuniorready.domain.resultchecker.dto.PlayerDto;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +31,8 @@ public class ResultCheckerFacadeTest {
         resultCheckerFacade = new ResultCheckerFacade(
                 numberGeneratorFacade,
                 numberReceiverFacade,
-                inMemoryPlayerRepository
+                inMemoryPlayerRepository,
+                new WinnersRetriever()
         );
     }
 
@@ -39,8 +41,8 @@ public class ResultCheckerFacadeTest {
         // given
         int ticketId = 1;
         LocalDateTime drawDate = LocalDateTime.now();
-        Ticket ticket = new Ticket(1, LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
-        WinningNumbers winningNumbers = new WinningNumbers(null, LocalDateTime.of(2024,12,29, 0,0, 0), new WinningNumbersSet(Set.of(1, 2, 3, 4, 5, 6)));
+        Ticket ticket = new Ticket(new ObjectId(), LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6)));
+        WinningNumbers winningNumbers = new WinningNumbers(new ObjectId(), LocalDateTime.of(2024,12,29, 0,0, 0), new WinningNumbersSet(Set.of(1, 2, 3, 4, 5, 6)));
 
         when(numberReceiverFacade.findTicketById(ticketId)).thenReturn(ticket);
         when(numberGeneratorFacade.findWinningNumbersByDate(drawDate)).thenReturn(Optional.of(winningNumbers));
@@ -60,7 +62,7 @@ public class ResultCheckerFacadeTest {
         // given
         int ticketId = 1;
         LocalDateTime drawDate = LocalDateTime.now();
-        when(numberReceiverFacade.findTicketById(ticketId)).thenReturn(new Ticket(1, LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6))));
+        when(numberReceiverFacade.findTicketById(ticketId)).thenReturn(new Ticket(new ObjectId(), LocalDateTime.now(), new SixNumbers(Set.of(1, 2, 3, 4, 5, 6))));
         when(numberGeneratorFacade.findWinningNumbersByDate(drawDate)).thenReturn(Optional.empty());
 
         // when + then
@@ -77,8 +79,8 @@ public class ResultCheckerFacadeTest {
         int ticketId = 3;
         LocalDateTime drawDate = LocalDateTime.now();
 
-        Ticket ticket = new Ticket(1, LocalDateTime.now(), new SixNumbers(Set.of(7, 8, 9, 10, 11, 12)));
-        WinningNumbers winningNumbers = new WinningNumbers(null, LocalDateTime.of(2024,12,29, 0,0, 0), new WinningNumbersSet(Set.of(1, 2, 3, 4, 5, 6)));
+        Ticket ticket = new Ticket(new ObjectId(), LocalDateTime.now(), new SixNumbers(Set.of(7, 8, 9, 10, 11, 12)));
+        WinningNumbers winningNumbers = new WinningNumbers(new ObjectId(), LocalDateTime.of(2024,12,29, 0,0, 0), new WinningNumbersSet(Set.of(1, 2, 3, 4, 5, 6)));
 
         when(numberReceiverFacade.findTicketById(ticketId)).thenReturn(ticket);
         when(numberGeneratorFacade.findWinningNumbersByDate(drawDate)).thenReturn(Optional.of(winningNumbers));

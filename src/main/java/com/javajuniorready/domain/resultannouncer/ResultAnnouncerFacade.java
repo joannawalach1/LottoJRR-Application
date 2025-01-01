@@ -5,6 +5,7 @@ import com.javajuniorready.domain.resultannouncer.dto.ResultAnnouncerResponseDto
 import com.javajuniorready.domain.resultchecker.ResultCheckerFacade;
 import com.javajuniorready.domain.resultchecker.dto.ResultDto;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ public class ResultAnnouncerFacade {
     private final ResponseRepository responseRepository;
     private final Clock clock;
 
-    public ResultAnnouncerResponseDto checkResult(String hash) {
+    public ResultAnnouncerResponseDto checkResult(ObjectId hash) {
         Optional<ResultResponse> resultResponseCached = responseRepository.findById(hash);
         if (resultResponseCached.isPresent()) {
             return new ResultAnnouncerResponseDto(
@@ -60,7 +61,7 @@ public class ResultAnnouncerFacade {
 
     private static ResponseDto buildResponseDto(ResultDto resultDto) {
         return ResponseDto.builder()
-                .hash(resultDto.hash())
+                .hash(new ObjectId())
                 .results(resultDto.result())
                 .hitNumbers(resultDto.hitNumbers())
                 .drawDate(resultDto.lottoDrawDate())

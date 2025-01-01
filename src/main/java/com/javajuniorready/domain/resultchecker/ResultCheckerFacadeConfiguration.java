@@ -13,10 +13,13 @@ public class ResultCheckerFacadeConfiguration {
             NumberReceiverFacade numberReceiverFacade,
             NumberGeneratorFacade numberGeneratorFacade,
             PlayerRepository playerRepository) {
+        WinnersRetriever winnersRetriever = new WinnersRetriever();
         return new ResultCheckerFacade(
                 numberGeneratorFacade,
                 numberReceiverFacade,
-                playerRepository
+                playerRepository,
+                winnersRetriever
+
         );
     }
 

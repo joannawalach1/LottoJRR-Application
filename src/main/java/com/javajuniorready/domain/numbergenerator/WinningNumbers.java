@@ -12,5 +12,10 @@ public record WinningNumbers(
         ObjectId id,
         LocalDateTime WinningNumbersDrawDate,
         WinningNumbersSet winningNumbersSet) {
-
+        public WinningNumbers withGeneratedId() {
+                if (this.id == null) {
+                        return new WinningNumbers(ObjectId.get(), this.WinningNumbersDrawDate, this.winningNumbersSet);
+                }
+                return this;
+        }
 }

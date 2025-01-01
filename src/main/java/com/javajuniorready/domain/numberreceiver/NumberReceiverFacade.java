@@ -2,6 +2,7 @@ package com.javajuniorready.domain.numberreceiver;
 
 import com.javajuniorready.domain.numberreceiver.dto.TicketDto;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +37,7 @@ public class NumberReceiverFacade {
         LocalDateTime lottoDrawDate = lottoDrawDateGenerator.generateDrawDate();
 
         Ticket ticketEntity = Ticket.builder()
-                .id(ticketDto.id())
+                .id(new ObjectId())
                 .sixNumbers(ticketDto.sixNumbers())
                 .lottoDrawDate(lottoDrawDate)
                 .build();

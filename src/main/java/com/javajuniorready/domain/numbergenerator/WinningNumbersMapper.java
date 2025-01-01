@@ -19,7 +19,7 @@ public class WinningNumbersMapper {
 
     public static WinningNumbersDto toWinningNumberDto(WinningNumbers winningNumbers) {
         return WinningNumbersDto.builder()
-                .id(counter)
+                .id(winningNumbers.withGeneratedId().id())
                 .WinningNumbersDrawDate(winningNumbers.WinningNumbersDrawDate())
                 .winningNumbersSet(winningNumbers.winningNumbersSet())
                 .build();
