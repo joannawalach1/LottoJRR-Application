@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class InMemoryPlayerRepositoryImpl implements PlayerRepository<Player, Integer> {
+public class InMemoryPlayerRepositoryImpl implements PlayerRepository {
     private final List<Player> playersDatabase = new ArrayList<>();
 
     @Override
@@ -131,7 +131,7 @@ public class InMemoryPlayerRepositoryImpl implements PlayerRepository<Player, In
     }
 
     @Override
-    public Optional<Player> findById(String ticketId) {
+    public Optional<Player> findByHash(String ticketId) {
         return playersDatabase.stream().findFirst();
     }
 }

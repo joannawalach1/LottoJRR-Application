@@ -12,7 +12,7 @@ public class ResultCheckerFacadeConfiguration {
     public ResultCheckerFacade resultCheckerFacade(
             NumberReceiverFacade numberReceiverFacade,
             NumberGeneratorFacade numberGeneratorFacade,
-            PlayerRepository<Player, Integer> playerRepository) {
+            PlayerRepository playerRepository) {
         return new ResultCheckerFacade(
                 numberGeneratorFacade,
                 numberReceiverFacade,

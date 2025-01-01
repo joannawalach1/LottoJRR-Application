@@ -21,7 +21,7 @@ public class ResultCheckerFacade {
 
     private final NumberGeneratorFacade numberGeneratorFacade;
     private final NumberReceiverFacade numberReceiverFacade;
-    private final PlayerRepository<Player, Integer> playerRepository;
+    private final PlayerRepository playerRepository;
 
     public List<PlayerDto> generateResults(int ticketId, LocalDateTime drawDate) {
         logger.info("Generating results for ticket ID: {} and draw date: {}", ticketId, drawDate);
@@ -84,7 +84,7 @@ public class ResultCheckerFacade {
 
 
     public ResultDto findByTicketId(String ticketId) {
-        Player player = playerRepository.findById(ticketId)
+        Player player = playerRepository.findByHash(ticketId)
                 .orElseThrow(() -> new PlayerResultNotFoundException("Not found for id: " + ticketId));
         return ResultDto.builder()
                 .hash(ticketId)
