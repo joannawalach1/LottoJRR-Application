@@ -33,7 +33,7 @@ class WinnersRetriever {
             builder.isWinner(true);
         }
         return builder
-                .hash(new ObjectId())
+                .hash(ticket.id())
                 .userNumbers(ticket.sixNumbers().userNumbers())
                 .hitNumbers(hitNumbers)
                 .lottoDrawDate(ticket.lottoDrawDate())

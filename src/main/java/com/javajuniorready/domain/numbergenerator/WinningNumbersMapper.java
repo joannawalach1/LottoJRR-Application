@@ -11,7 +11,6 @@ public class WinningNumbersMapper {
 
     public static WinningNumbers toWinningNumberEntity(WinningNumbersDto winningNumbersDto) {
         return WinningNumbers.builder()
-                .id(winningNumbersDto.id())
                 .WinningNumbersDrawDate(winningNumbersDto.WinningNumbersDrawDate())
                 .winningNumbersSet(winningNumbersDto.winningNumbersSet())
                 .build();
@@ -19,7 +18,6 @@ public class WinningNumbersMapper {
 
     public static WinningNumbersDto toWinningNumberDto(WinningNumbers winningNumbers) {
         return WinningNumbersDto.builder()
-                .id(winningNumbers.withGeneratedId().id())
                 .WinningNumbersDrawDate(winningNumbers.WinningNumbersDrawDate())
                 .winningNumbersSet(winningNumbers.winningNumbersSet())
                 .build();

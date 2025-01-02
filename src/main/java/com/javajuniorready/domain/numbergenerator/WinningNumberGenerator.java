@@ -31,7 +31,6 @@ public class WinningNumberGenerator {
 
             logger.info("Set of numbers: {}", numbersSet);
             WinningNumbers winningNumbers = WinningNumbers.builder()
-                    .id(new ObjectId())
                     .WinningNumbersDrawDate(lottoDrawDate)
                     .winningNumbersSet(numbersSet)
                     .build();

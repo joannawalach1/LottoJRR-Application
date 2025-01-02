@@ -7,8 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 @Repository
 public interface NumberTicketRepository extends MongoRepository<Ticket, Integer> {
-    Optional<Ticket> findTicketById(ObjectId id);
-
+    Optional<Ticket> findTicketById(String id);
     Optional<Ticket> findById(String id);
 };
 

@@ -1,16 +1,20 @@
 package com.javajuniorready;
 
+import com.javajuniorready.domain.numberreceiver.NumberReceiverFacadeConfigurationProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
 @SpringBootApplication
-@EnableMongoRepositories(basePackages = {"com.javajuniorready.domain.numbergenerator",
+@EnableMongoRepositories(basePackages = {
+        "com.javajuniorready.domain.numbergenerator",
         "com.javajuniorready.domain.resultchecker",
         "com.javajuniorready.domain.numberreceiver",
         "com.javajuniorready.domain.resultannouncer"})
+@EnableConfigurationProperties({NumberReceiverFacadeConfigurationProperties.class})
 public class LottoApplication {
 
     public static void main(String[] args) {

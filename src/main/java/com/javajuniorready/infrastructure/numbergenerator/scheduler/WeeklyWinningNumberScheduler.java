@@ -20,11 +20,12 @@ public class WeeklyWinningNumberScheduler {
     }
 
     @Scheduled(cron = "0 55 15 * * SUN")
-    public void generateWinningNumbers() throws JsonProcessingException {
+    public boolean generateWinningNumbers() throws JsonProcessingException {
         LocalDateTime drawDate = LocalDateTime.now();
         logger.info("Generating winning numbers started...");
         numberGeneratorFacade.generateLottoWinningNumbers(drawDate);
         logger.info("Generating winning numbers finished.");
+        return false;
     }
 }
 

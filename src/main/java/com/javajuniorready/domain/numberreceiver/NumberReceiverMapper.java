@@ -10,7 +10,7 @@ public class NumberReceiverMapper {
 
     public static Ticket toTicketEntity(TicketDto userTicket) {
         return Ticket.builder()
-                .id(new ObjectId())
+                .id(userTicket.id())
                 .lottoDrawDate(userTicket.lottoDrawDate())
                 .sixNumbers(userTicket.sixNumbers())
                 .build();

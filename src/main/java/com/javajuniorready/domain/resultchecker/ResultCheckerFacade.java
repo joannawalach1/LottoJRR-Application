@@ -8,7 +8,6 @@ import com.javajuniorready.domain.numberreceiver.Ticket;
 import com.javajuniorready.domain.resultchecker.dto.PlayerDto;
 import com.javajuniorready.domain.resultchecker.dto.ResultDto;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,11 +84,10 @@ public class ResultCheckerFacade {
     }
 
 
-    public ResultDto findByTicketId(ObjectId ticketId) {
+    public ResultDto findByTicketId(String ticketId) {
         Player player = playerRepository.findByHash(ticketId)
                 .orElseThrow(() -> new PlayerResultNotFoundException("Not found for id: " + ticketId));
         return ResultDto.builder()
-                .hash(ticketId.toString())
                 .result(player.userNumbers())
                 .hitNumbers(player.hitNumbers())
                 .lottoDrawDate(player.lottoDrawDate())

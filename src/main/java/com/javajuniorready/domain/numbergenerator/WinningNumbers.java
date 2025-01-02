@@ -1,5 +1,4 @@
 package com.javajuniorready.domain.numbergenerator;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Builder;
@@ -9,13 +8,7 @@ import java.time.LocalDateTime;
 @Document(collection = "winning_numbers")
 public record WinningNumbers(
         @Id
-        ObjectId id,
+        String id,
         LocalDateTime WinningNumbersDrawDate,
         WinningNumbersSet winningNumbersSet) {
-        public WinningNumbers withGeneratedId() {
-                if (this.id == null) {
-                        return new WinningNumbers(ObjectId.get(), this.WinningNumbersDrawDate, this.winningNumbersSet);
-                }
-                return this;
-        }
 }

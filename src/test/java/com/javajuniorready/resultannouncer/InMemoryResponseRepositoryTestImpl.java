@@ -2,7 +2,6 @@ package com.javajuniorready.resultannouncer;
 
 import com.javajuniorready.domain.resultannouncer.ResponseRepository;
 import com.javajuniorready.domain.resultannouncer.ResultResponse;
-import org.bson.types.ObjectId;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,41 +9,39 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class InMemoryResponseRepositoryTestImpl implements ResponseRepository {
-
-    private final Map<ObjectId, ResultResponse> responseList = new ConcurrentHashMap<>();
+    private final List<ResultResponse> responseList = new ArrayList<>();;
 
     @Override
-    public ResultResponse save(ResultResponse resultResponse) {
-        return responseList.put(resultResponse.hash(), resultResponse);
+    public Optional<ResultResponse> findById(String hash) {
+        return Optional.empty();
     }
 
     @Override
-    public Optional<ResultResponse> findById(ObjectId hash) {
-        return Optional.ofNullable(responseList.get(hash));
+    public boolean existsById(String s) {
+        return false;
     }
+
 
     @Override
-    public boolean existsById(ObjectId hash) {
-        return responseList.containsKey(hash);
+    public <S extends ResultResponse> S save(S entity) {
+        return null;
     }
-
 
     @Override
     public <S extends ResultResponse> List<S> saveAll(Iterable<S> entities) {
-        return null;
+        return List.of();
     }
 
     @Override
     public List<ResultResponse> findAll() {
-        return null;
+        return List.of();
     }
 
     @Override
-    public Iterable<ResultResponse> findAllById(Iterable<ObjectId> objectIds) {
+    public Iterable<ResultResponse> findAllById(Iterable<String> strings) {
         return null;
     }
 
@@ -54,10 +51,9 @@ public class InMemoryResponseRepositoryTestImpl implements ResponseRepository {
     }
 
     @Override
-    public void deleteById(ObjectId objectId) {
+    public void deleteById(String s) {
 
     }
-
 
     @Override
     public void delete(ResultResponse entity) {
@@ -65,7 +61,7 @@ public class InMemoryResponseRepositoryTestImpl implements ResponseRepository {
     }
 
     @Override
-    public void deleteAllById(Iterable<? extends ObjectId> objectIds) {
+    public void deleteAllById(Iterable<? extends String> strings) {
 
     }
 
@@ -81,7 +77,7 @@ public class InMemoryResponseRepositoryTestImpl implements ResponseRepository {
 
     @Override
     public List<ResultResponse> findAll(Sort sort) {
-        return null;
+        return List.of();
     }
 
     @Override
@@ -96,7 +92,7 @@ public class InMemoryResponseRepositoryTestImpl implements ResponseRepository {
 
     @Override
     public <S extends ResultResponse> List<S> insert(Iterable<S> entities) {
-        return null;
+        return List.of();
     }
 
     @Override
@@ -106,12 +102,12 @@ public class InMemoryResponseRepositoryTestImpl implements ResponseRepository {
 
     @Override
     public <S extends ResultResponse> List<S> findAll(Example<S> example) {
-        return null;
+        return List.of();
     }
 
     @Override
     public <S extends ResultResponse> List<S> findAll(Example<S> example, Sort sort) {
-        return null;
+        return List.of();
     }
 
     @Override

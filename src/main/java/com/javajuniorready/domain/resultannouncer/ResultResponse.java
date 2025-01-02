@@ -1,7 +1,6 @@
 package com.javajuniorready.domain.resultannouncer;
 
 import lombok.Builder;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,7 +13,7 @@ import java.util.Set;
 @Document
 public record ResultResponse(
         @Id
-        ObjectId hash,
+        String hash,
         Set<Integer> results,
         Set<Integer> hitNumbers,
         Set<Integer> wonNumbers,

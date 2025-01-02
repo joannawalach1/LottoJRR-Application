@@ -18,7 +18,7 @@ public class InMemoryTicketRepositoryImpl implements NumberTicketRepository {
 
 
     @Override
-    public Optional<Ticket> findTicketById(ObjectId id) {
+    public Optional<Ticket> findTicketById(String id) {
         return ticketsDatabase.stream()
                 .filter(ticket -> ticket.id().equals(id))
                 .findFirst();

@@ -1,13 +1,16 @@
 package com.javajuniorready.domain.numberreceiver;
 
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
+import java.util.stream.Collectors;
+@RequiredArgsConstructor
 public class NumbersValidator {
+    private final NumberReceiverFacadeConfigurationProperties properties;
     SixNumbers validateUserNumbers(SixNumbers userNumber) {
          userNumber.userNumbers().stream()
-                .limit(6)
-                .filter(number -> number <= 1)
-                .filter(number -> number >= 99)
+                .limit(properties.count())
+                .filter(number -> number <= properties.lowBound())
+                .filter(number -> number >= properties.highBound())
                 .collect(Collectors.toSet());
         return userNumber;
     }

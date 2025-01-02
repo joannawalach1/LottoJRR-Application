@@ -132,7 +132,7 @@ public class InMemoryPlayerRepositoryImpl implements PlayerRepository {
     }
 
     @Override
-    public Optional<Player> findByHash(ObjectId ticketId) {
+    public Optional<Player> findByHash(String ticketId) {
         return playersDatabase.stream().findFirst();
     }
 }

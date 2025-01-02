@@ -2,13 +2,11 @@ package com.javajuniorready.domain.numberreceiver;
 
 import com.javajuniorready.domain.numberreceiver.dto.TicketDto;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 public class NumberReceiverFacade {
@@ -25,8 +23,12 @@ public class NumberReceiverFacade {
         }
 
         if (ticketDto.sixNumbers().userNumbers().size() != 6) {
-            throw new IllegalArgumentException("SixNumbers must have exactly 6 numbers");
+            throw new IllegalArgumentException(String.format(
+                    "SixNumbers must have exactly %d numbers, but found %d",
+                    ticketDto.sixNumbers().userNumbers().size()
+            ));
         }
+
 
         ticketDto.sixNumbers().userNumbers().forEach(number -> {
             if (number < 1 || number > 99) {
@@ -37,7 +39,7 @@ public class NumberReceiverFacade {
         LocalDateTime lottoDrawDate = lottoDrawDateGenerator.generateDrawDate();
 
         Ticket ticketEntity = Ticket.builder()
-                .id(new ObjectId())
+                .id(ticketDto.id().toString())
                 .sixNumbers(ticketDto.sixNumbers())
                 .lottoDrawDate(lottoDrawDate)
                 .build();
@@ -53,13 +55,7 @@ public class NumberReceiverFacade {
     }
 
     public List<Ticket> findAll() {
-        List<Ticket> allTickets = numberTicketRepository.findAll();
+        return numberTicketRepository.findAll();
 
-        return Optional.of(allTickets)
-                .filter(tickets -> !tickets.isEmpty())
-                .orElseThrow(() -> {
-                    logger.info("No tickets found in the database.");
-                    return new TicketNotFoundException("Tickets not found");
-                });
     }
 }

@@ -2,14 +2,17 @@ package com.javajuniorready.resultannouncer;
 
 import com.javajuniorready.domain.resultannouncer.ResultAnnouncerConfiguration;
 import com.javajuniorready.domain.resultannouncer.ResultAnnouncerFacade;
+import com.javajuniorready.domain.resultannouncer.ResultResponse;
+import com.javajuniorready.domain.resultannouncer.ResultResponseMapper;
+import com.javajuniorready.domain.resultannouncer.dto.ResponseDto;
 import com.javajuniorready.domain.resultannouncer.dto.ResultAnnouncerResponseDto;
 import com.javajuniorready.domain.resultchecker.ResultCheckerFacade;
 import com.javajuniorready.domain.resultchecker.dto.ResultDto;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.javajuniorready.domain.resultannouncer.MessageResponse.*;
@@ -24,7 +27,7 @@ public class ResultAnnouncerFacadeTest {
     @Test
     public void it_should_return_response_with_hash_does_not_exist_message_if_hash_does_not_exist() {
         //given
-        ObjectId hash = new ObjectId();
+        String hash = "123";
         ResultAnnouncerFacade resultAnnouncerFacade = new ResultAnnouncerConfiguration().resultAnnouncerFacade(resultCheckerFacade, responseRepository, Clock.systemUTC());
 
         when(resultCheckerFacade.findByTicketId(hash)).thenReturn(null);
@@ -39,7 +42,7 @@ public class ResultAnnouncerFacadeTest {
     public void it_should_return_response_with_hash_does_not_exist_message_if_response_is_not_saved_to_db_yet() {
         //given
         LocalDateTime drawDate = LocalDateTime.of(2022, 12, 17, 12, 0, 0);
-        ObjectId hash = new ObjectId();
+        String hash = "123";
         ResultDto resultDto = ResultDto.builder()
                 .hash("123")
                 .result(Set.of(1, 2, 3, 4, 5, 6))
@@ -52,7 +55,7 @@ public class ResultAnnouncerFacadeTest {
 
         ResultAnnouncerFacade resultAnnouncerFacade = new ResultAnnouncerConfiguration().resultAnnouncerFacade(resultCheckerFacade, responseRepository, Clock.systemUTC());
         ResultAnnouncerResponseDto resultAnnouncerResponseDto1 = resultAnnouncerFacade.checkResult(hash);
-        ObjectId underTest = resultAnnouncerResponseDto1.responseDto().hash();
+        String underTest = resultAnnouncerResponseDto1.responseDto().hash();
         //when
         ResultAnnouncerResponseDto resultAnnouncerResponseDto = resultAnnouncerFacade.checkResult(underTest);
         //then
@@ -63,26 +66,37 @@ public class ResultAnnouncerFacadeTest {
     }
 
     @Test
-    public void it_should_return_lose_message_if_winner_doesnt_exist() {
+    public void it_should_return_response_with_lose_message_if_ticket_is_not_winning_ticket() {
         //given
         LocalDateTime drawDate = LocalDateTime.of(2022, 12, 17, 12, 0, 0);
-        ObjectId hash = new ObjectId();
+        String hash = "123";
+        ResultAnnouncerFacade resultAnnouncerFacade = new ResultAnnouncerConfiguration().resultAnnouncerFacade(resultCheckerFacade, responseRepository, Clock.systemUTC());
         ResultDto resultDto = ResultDto.builder()
                 .hash("123")
                 .result(Set.of(1, 2, 3, 4, 5, 6))
-                .hitNumbers(Set.of(7, 8, 9, 10, 11, 12))
-                .wonNumbers(Set.of(1, 2, 3, 4, 9, 0))
+                .hitNumbers(Set.of())
+                .wonNumbers(Set.of())
                 .lottoDrawDate(drawDate)
                 .isWinner(false)
                 .build();
         when(resultCheckerFacade.findByTicketId(hash)).thenReturn(resultDto);
-
-        ResultAnnouncerFacade resultAnnouncerFacade = new ResultAnnouncerConfiguration().resultAnnouncerFacade(resultCheckerFacade, responseRepository, Clock.systemUTC());
-        ResultAnnouncerResponseDto resultAnnouncerResponseDto1 = resultAnnouncerFacade.checkResult(hash);
+        //when
+        ResultAnnouncerResponseDto resultAnnouncerResponseDto = resultAnnouncerFacade.checkResult(hash);
         //then
-        ResultAnnouncerResponseDto expectedResult = new ResultAnnouncerResponseDto(
-                resultAnnouncerResponseDto1.responseDto()
-                ,LOSE_MESSAGE.info);
-        assertThat(resultAnnouncerResponseDto1).isEqualTo(expectedResult);
+        ResponseDto responseDto = ResponseDto.builder()
+                .hash("123")
+                .results(Set.of(1, 2, 3, 4, 5, 6))
+                .hitNumbers(Set.of())
+                .drawDate(drawDate)
+                .wonNumbers(Set.of())
+                .isWinner(false)
+                .build();
+
+        ResultAnnouncerResponseDto expectedResult = new ResultAnnouncerResponseDto(responseDto, LOSE_MESSAGE.info);
+        assertThat(resultAnnouncerResponseDto).isEqualTo(expectedResult);
     }
+
+
 }
+
+
